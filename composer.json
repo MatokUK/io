@@ -1,0 +1,26 @@
+{
+    "name": "matok/io",
+    "description": "IO operations",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matej Kuna",
+            "email": "mat.kuna@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Matok\\IO\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Matok\\IO\\Tests\\": "tests/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
+    }
+}
