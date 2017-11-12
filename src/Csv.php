@@ -70,14 +70,13 @@ class Csv
 
     private function openFile($mode = 'a')
     {
-        if (null === $this->fp) {
+        if (empty($this->fp)) {
             $this->fp = @fopen($this->filename, $mode);
         }
     }
 
     private function checkFp()
     {
-       // var_dump('checking', $this->fp);
         if ($this->fp === false) {
             throw new FileNotExistsException();
         }
