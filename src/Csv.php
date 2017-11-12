@@ -2,6 +2,8 @@
 
 namespace Matok\IO;
 
+use Matok\IO\Exception\FileNotExistsException;
+
 class Csv
 {
     private $delimiter = ';';
@@ -17,13 +19,6 @@ class Csv
         $this->readOptions($options);
     }
 
-    public function __destruct()
-    {
-        if (null !== $this->fp) {
-            fclose($this->fp);
-        }
-    }
-
     private function readOptions($options)
     {
         if (isset($options['delimiter'])) {
@@ -34,6 +29,7 @@ class Csv
     public function readLines()
     {
         $this->openFile('r');
+        $this->checkFp();
 
         $result = [];
         while (($data = fgetcsv($this->fp, 0, $this->delimiter)) !== false) {
@@ -47,6 +43,7 @@ class Csv
     {
         $actualLine = 1;
         $this->openFile('r');
+        $this->checkFp();
 
         while (($data = fgetcsv($this->fp, 0, $this->delimiter)) !== false) {
             if ($lineNumber == $actualLine++) {
@@ -74,7 +71,23 @@ class Csv
     private function openFile($mode = 'a')
     {
         if (null === $this->fp) {
-            $this->fp = fopen($this->filename, $mode);
+            $this->fp = @fopen($this->filename, $mode);
+        }
+    }
+
+    private function checkFp()
+    {
+       // var_dump('checking', $this->fp);
+        if ($this->fp === false) {
+            throw new FileNotExistsException();
+        }
+    }
+
+
+    public function __destruct()
+    {
+        if (!empty($this->fp)) {
+            fclose($this->fp);
         }
     }
 }

@@ -43,6 +43,15 @@ class CsvIOTest extends TestCase
         $this->assertEquals($expectedContent, file_get_contents(__DIR__.'/write/example.csv'));
     }
 
+    /**
+     * @expectedException \Matok\IO\Exception\FileNotExistsException
+     */
+    public function testReadNonExistingFile()
+    {
+        $csvReader = new Csv(__DIR__.'/read/not_exist.csv');
+        $csvReader->readLine(1);
+    }
+
     public function getFilesForReading()
     {
         return [
