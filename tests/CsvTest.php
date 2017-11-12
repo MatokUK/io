@@ -3,6 +3,7 @@
 namespace Matok\IO\Test;
 
 use Matok\IO\Csv;
+use Matok\IO\Exception\FileNotExistsException;
 use PHPUnit\Framework\TestCase;
 
 class CsvIOTest extends TestCase
@@ -43,6 +44,19 @@ class CsvIOTest extends TestCase
         $this->assertEquals($expectedContent, file_get_contents(__DIR__.'/write/example.csv'));
     }
 
+    public function testReadThanWrite()
+    {
+        file_put_contents(__DIR__.'/write/permission.csv', '');
+        $csvIO = new Csv(__DIR__.'/write/permission.csv');
+
+
+        $line = $csvIO->readLine(0);
+        $csvIO->writeLine(['write', 'write', 'writing']);
+
+        $check = file_get_contents(__DIR__.'/write/permission.csv');
+        $this->assertContains('write', $check);
+    }
+
     /**
      * @expectedException \Matok\IO\Exception\FileNotExistsException
      */
@@ -64,6 +78,10 @@ class CsvIOTest extends TestCase
     {
         if (is_file(__DIR__.'/write/example.csv')) {
             unlink(__DIR__.'/write/example.csv');
+        }
+
+        if (is_file(__DIR__.'/write/permission.csv')) {
+            unlink(__DIR__.'/write/permission.csv');
         }
     }
 }

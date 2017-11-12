@@ -70,8 +70,22 @@ class Csv
 
     private function openFile($mode = 'a')
     {
+        $this->escalateFilePermissions($mode);
+
         if (empty($this->fp)) {
             $this->fp = @fopen($this->filename, $mode);
+        }
+    }
+
+    private function escalateFilePermissions($mode)
+    {
+        if (!empty($this->fp)) {
+            $metaData = stream_get_meta_data($this->fp);
+
+            if ($mode != $metaData['mode']) {
+                fclose($this->fp);
+                $this->fp = null;
+            }
         }
     }
 
